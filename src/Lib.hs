@@ -2,7 +2,6 @@ module Lib (
   someFunc
 ) where
 
-import System.Random
 import CodeWorld
 import Objects
 import Types
