@@ -15,28 +15,40 @@ handleGame (KeyPress "Right") game = _action game RIGHT
 handleGame _ game                  = game
 
 _action :: Game -> Direction -> Game
-_action (Game (Player (Position x y) mass)) LEFT = Game (Player (Position (x - 1) y) mass)
-_action (Game (Player (Position x y) mass)) RIGHT = Game (Player (Position (x + 1) y) mass)
+_action (Game (Player (Position x y) (Velocity velX velY) mass) pl) LEFT = 
+  Game (Player (Position x y) (Velocity (velX - speedConst) velY) mass) pl
+_action (Game (Player (Position x y) (Velocity velX velY) mass) pl) RIGHT = 
+  Game (Player (Position x y) (Velocity (velX + speedConst) velY) mass) pl
 
 gravity :: Double -> Game -> Game
-gravity dt (Game (Player pos mass)) = Game (Player (updPos pos) mass)
+gravity dt (Game (Player pos vel mass) platforms) = Game updatePlayer platforms
   where
-    updPos (Position x y)
-      | isNotCollision (Position x (y - (gravityConst * mass))) = Position x (y - (gravityConst * mass))
-      | otherwise       = Position x y
+    updatePlayer :: Player
+    updatePlayer = Player (uPos pos vel) (uVel pos vel) mass
+    uPos :: Position -> Velocity -> Position
+    uPos (Position x y) (Velocity x' y') 
+      | y + y' > windowHeight = Position (x + x') ((-windowHeight) + y')
+      | y + y' < -windowHeight = Position (x + x') (windowHeight + y')
+      | x + x' > windowWidth = Position ((-windowWidth) + x') (y + y')
+      | x + x' < -windowWidth = Position (windowWidth + x') (y + y')
+      | otherwise = Position (x + x') (y + y')
+    uVel :: Position -> Velocity -> Velocity
+    uVel (Position x y) (Velocity x' y')
+      | isCollision (Position x (y + y')) platforms = Velocity x' jumpConst
+      | x' >= 0 && y' >= 0 = Velocity (x' - (speedVel * dt)) (y' - (jumpVel * gravityConst * mass * dt))
+      | x' <= 0 && y' >= 0 = Velocity (x' + (speedVel * dt)) (y' - (jumpVel * gravityConst * mass * dt))
+      | y' < 0             = Velocity x' (y' - (jumpVel * gravityConst * mass * dt))
+      | otherwise          = Velocity x' y'
 
-
--- | IMPORTANT NOT FOR PRODUCTION
-isNotCollision :: Position -> Bool
-isNotCollision (Position x y)
-  -- | y < 0 + platHeight || (x < -5 && x > 5) = True
-  | x < platX + platWidth &&
-      x + 1 > platX &&
-      y < platY + platHeight &&
-      1 + y > platY = False
-  | otherwise = True
+isCollision :: Position -> [Platform] -> Bool
+isCollision (Position x y) pl = or check
   where
-    platX = -5
-    platWidth = 10
-    platY = 0
-    platHeight = 1
+    check = map (\(Platform (Position plX plY) width height) -> collision plX plY width height) pl
+    collision plX plY width height
+      | x < realX + width &&
+        x + playerWidth > realX &&
+        y < plY + height &&
+        playerHeight + y > plY = True
+      | otherwise = False
+      where
+        realX = plX + (-width / 2)

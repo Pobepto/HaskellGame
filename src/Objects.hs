@@ -6,7 +6,7 @@ import CodeWorld
 import Types
 
 floorTile :: Picture
-floorTile = colored black (solidRectangle 11 1)
+floorTile = colored black (solidRectangle 5 1)
 
 playerTile :: Picture
 playerTile = colored red (solidRectangle 1 1)
@@ -16,7 +16,9 @@ blockTile = colored blue (solidRectangle 1 1)
 
 drawAt :: Position -> Picture -> Picture
 drawAt (Position x y) obj = translated x y obj
-  where
 
 simple :: Game -> Picture
-simple (Game (Player (Position x y) _)) = drawAt (Position 0 0) floorTile <> drawAt (Position x y) playerTile
+simple (Game (Player (Position x y) _ _ ) pl) = drawAt (Position x y) playerTile <> drawPlatforms
+  where
+    drawPlatforms :: Picture
+    drawPlatforms = foldl (<>) blank (map (\(Platform pos _ _) -> drawAt pos floorTile) pl)
