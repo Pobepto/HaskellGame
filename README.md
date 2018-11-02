@@ -12,6 +12,6 @@ Timur Khazhiev
 - [x] Implemented gravity
 
 #### Works to do
-- [] Add random generation of platforms
-- [] Add score points to game
-- [] Add start and defeat screens
+- [ ] Add random generation of platforms
+- [ ] Add score points to game
+- [ ] Add start and defeat screens
