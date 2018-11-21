@@ -10,23 +10,23 @@ module Settings (
   windowWidth
 ) where
 
-gravityConst :: Double
+gravityConst :: Float
 gravityConst = 2
 
-speedConst :: Double
+speedConst :: Float
 speedConst = 0.1
 
-jumpConst :: Double
+jumpConst :: Float
 jumpConst = 0.3
 
-jumpVel, speedVel :: Double
+jumpVel, speedVel :: Float
 jumpVel = 0.1
 speedVel = 0.5
 
-playerWidth, playerHeight :: Double
-playerWidth  = 1
-playerHeight = 1
+playerWidth, playerHeight :: Float
+playerWidth  = 3
+playerHeight = 3
 
-windowWidth, windowHeight :: Double
-windowWidth = 10
-windowHeight = 10
+windowWidth, windowHeight :: Float
+windowWidth = 100
+windowHeight = 100

@@ -19,20 +19,20 @@ data Game = Game
 
 data Position = Position
   {
-    x :: Double,
-    y :: Double
+    x :: Float,
+    y :: Float
   }
 
 data Velocity = Velocity
   {
-    velX :: Double,
-    velY :: Double
+    velX :: Float,
+    velY :: Float
   }
 
 data Acceleration = Acceleration
   {
-    accX :: Double,
-    accY :: Double
+    accX :: Float,
+    accY :: Float
   }
   
 data LevelPattern = LevelPattern
@@ -44,12 +44,12 @@ data Player = Player
   {
     playerPosition     :: Position,
     playerVelocity     :: Velocity,
-    playerMass         :: Double
+    playerMass         :: Float
   }
 
 data Platform = Platform
   {
     platformPosition :: Position,
-    platformWidth    :: Double,
-    platformHeight   :: Double
+    platformWidth    :: Float,
+    platformHeight   :: Float
   }

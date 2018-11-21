@@ -3,8 +3,7 @@ module Lib (
 ) where
 
 import System.Random
-
-import CodeWorld
+import Graphics.Gloss
 import Objects
 import Types
 import Input
@@ -20,7 +19,7 @@ initialGame rnd = Game
     )
     ( getLevel $ getRandomInt rnd 1 10 )
 
-updateGame :: Double -> Game -> Game
+updateGame :: Float -> Game -> Game
 updateGame dt game = gravity dt game
 
 drawGame :: Game -> Picture
@@ -29,4 +28,4 @@ drawGame game = simple game
 someFunc :: IO ()
 someFunc = do
     g <- newStdGen
-    interactionOf (initialGame g) updateGame handleGame drawGame
+    play FullScreen white 60 (initialGame g) drawGame handleGame updateGame 

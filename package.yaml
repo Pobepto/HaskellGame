@@ -1,5 +1,5 @@
 name:                game
-version:             0.1.0.0
+version:             0.1.0.2
 github:              "githubuser/game"
 license:             BSD3
 author:              "Author name here"
@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - codeworld-api >= 0.2.5
 - random >= 1.1
+- gloss >= 1.13.0.1
 
 library:
   source-dirs: src

@@ -5,13 +5,14 @@ module Input (
   gravity
 ) where
 
-import CodeWorld
+import Graphics.Gloss
+import Graphics.Gloss.Interface.IO.Interact
 import Types
 import Settings
 
 handleGame :: Event -> Game -> Game
-handleGame (KeyPress "Left")  game = _action game LEFT
-handleGame (KeyPress "Right") game = _action game RIGHT
+handleGame (EventKey (SpecialKey KeyLeft) up _ _ )  game = _action game LEFT
+handleGame (EventKey (SpecialKey KeyRight) up _ _) game = _action game RIGHT
 handleGame _ game                  = game
 
 _action :: Game -> Direction -> Game
@@ -20,7 +21,7 @@ _action (Game (Player (Position x y) (Velocity velX velY) mass) pl) LEFT =
 _action (Game (Player (Position x y) (Velocity velX velY) mass) pl) RIGHT = 
   Game (Player (Position x y) (Velocity (velX + speedConst) velY) mass) pl
 
-gravity :: Double -> Game -> Game
+gravity :: Float -> Game -> Game
 gravity dt (Game (Player pos vel mass) platforms) = Game updatePlayer platforms
   where
     updatePlayer :: Player
