@@ -14,7 +14,7 @@ import Utils
 initialGame :: StdGen -> Game
 initialGame rnd = Game
     (Player
-        (Position (-4) 2)
+        (Position 0 0)
         (Velocity 0 0)
         1
     )
