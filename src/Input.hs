@@ -40,12 +40,12 @@ gravity dt (Game (Player pos vel mass) platforms) = Game updatePlayer platforms
       | y' < 0             = Velocity x' (y' - (jumpVel * gravityConst * mass * dt))
       | otherwise          = Velocity x' y'
 
-isCollision :: Position -> [Platform] -> Bool
-isCollision (Position x y) pl = or check
+isCollision :: Position -> LevelPattern -> Bool
+isCollision (Position x y) (LevelPattern pl) = or check
   where
     check = map (\(Platform (Position plX plY) width height) -> collision plX plY width height) pl
     collision plX plY width height
-      | x < realX + width &&
+      | x < realX + (width + 1) &&
         x + playerWidth > realX &&
         y < plY + height &&
         playerHeight + y > plY = True

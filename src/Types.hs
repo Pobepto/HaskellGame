@@ -6,6 +6,7 @@ module Types (
   Player (Player),
   Platform (Platform),
   Direction (LEFT, RIGHT),
+  LevelPattern (LevelPattern)
 ) where
 
 data Direction = LEFT | RIGHT deriving Eq
@@ -13,7 +14,7 @@ data Direction = LEFT | RIGHT deriving Eq
 data Game = Game
   {
     player :: Player,
-    platforms :: [Platform]
+    level  :: LevelPattern
   }
 
 data Position = Position
@@ -32,6 +33,11 @@ data Acceleration = Acceleration
   {
     accX :: Double,
     accY :: Double
+  }
+  
+data LevelPattern = LevelPattern
+  {
+    platforms :: [Platform]
   }
 
 data Player = Player

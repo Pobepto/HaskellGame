@@ -14,7 +14,7 @@ gravityConst :: Double
 gravityConst = 2
 
 speedConst :: Double
-speedConst = 0.5
+speedConst = 0.1
 
 jumpConst :: Double
 jumpConst = 0.3

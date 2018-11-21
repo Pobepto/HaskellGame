@@ -18,7 +18,7 @@ drawAt :: Position -> Picture -> Picture
 drawAt (Position x y) obj = translated x y obj
 
 simple :: Game -> Picture
-simple (Game (Player (Position x y) _ _ ) pl) = drawAt (Position x y) playerTile <> drawPlatforms
+simple (Game (Player (Position x y) _ _ ) (LevelPattern pl)) = drawAt (Position x y) playerTile <> drawPlatforms
   where
     drawPlatforms :: Picture
     drawPlatforms = foldl (<>) blank (map (\(Platform pos _ _) -> drawAt pos floorTile) pl)
