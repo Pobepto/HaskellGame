@@ -9,6 +9,7 @@ import Objects
 import Types
 import Input
 import Levels
+import Utils
 
 initialGame :: StdGen -> Game
 initialGame rnd = Game
@@ -17,10 +18,7 @@ initialGame rnd = Game
         (Velocity 0 0)
         1
     )
-    ( getLevel getInt )
-    where
-        getInt :: Int
-        getInt = fst $ randomR (1, 10) rnd
+    ( getLevel $ getRandomInt rnd 1 10 )
 
 updateGame :: Double -> Game -> Game
 updateGame dt game = gravity dt game
