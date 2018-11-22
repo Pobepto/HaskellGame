@@ -28,5 +28,5 @@ playerWidth  = 3
 playerHeight = 3
 
 windowWidth, windowHeight :: Float
-windowWidth = 100
-windowHeight = 100
+windowWidth = 10
+windowHeight = 10

@@ -6,6 +6,7 @@ module Objects (
 import Types
 import Graphics.Gloss
 import System.IO.Unsafe (unsafePerformIO)
+
 cnst :: Float
 cnst = 10
 

@@ -28,4 +28,6 @@ drawGame game = simple game
 someFunc :: IO ()
 someFunc = do
     g <- newStdGen
-    play FullScreen white 60 (initialGame g) drawGame handleGame updateGame 
+    play screen white 60 (initialGame g) drawGame handleGame updateGame 
+    where
+        screen = InWindow "Doodle Jump" (200, 200) (100, 100)
