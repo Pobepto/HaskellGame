@@ -39,7 +39,9 @@ packages:
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 extra-deps: [
-  'codeworld-api-0.2.5'
+  'codeworld-api-0.2.5',
+  'gloss-1.13.0.1',
+  'gloss-rendering-1.13.0.2',
 ]
 
 # Override default flag values for local packages and extra-deps

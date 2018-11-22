@@ -1,24 +1,32 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Objects (
   simple
 ) where
 
-import CodeWorld
 import Types
+import Graphics.Gloss
+import System.IO.Unsafe (unsafePerformIO)
+cnst :: Float
+cnst = 10
 
 floorTile :: Picture
-floorTile = colored black (solidRectangle 5 1)
+--floorTile = Color green (rectangleSolid (5 * cnst)  (1 * cnst) )
+floorTile = unsafePerformIO $ loadBMP "src/assets/p-green.bmp"
 
+ 
 playerTile :: Picture
-playerTile = colored red (solidRectangle 1 1)
+--playerTile = Color red (rectangleSolid (1 * cnst) (1 * cnst))
+playerTile = (scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleL.bmp") <> Color red (rectangleWire (3 * cnst) (3 * cnst))
+
 
 blockTile :: Picture
-blockTile = colored blue (solidRectangle 1 1)
+blockTile = Color blue (rectangleSolid 1 1)
 
 drawAt :: Position -> Picture -> Picture
-drawAt (Position x y) obj = translated x y obj
+drawAt (Position x y) obj = Translate (x * cnst) (y *cnst) obj
 
 simple :: Game -> Picture
-simple (Game (Player (Position x y) _ _ ) (LevelPattern pl)) = drawAt (Position x y) playerTile <> drawPlatforms
+simple (Game (Player (Position x y) _ _ ) (LevelPattern pl)) =drawPlatforms <> drawAt (Position x y) playerTile 
   where
     drawPlatforms :: Picture
-    drawPlatforms = foldl (<>) blank (map (\(Platform pos _ _) -> drawAt pos floorTile) pl)
+    drawPlatforms = foldl (<>) Blank (map (\(Platform pos _ _) -> drawAt pos floorTile) pl)
