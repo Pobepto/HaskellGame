@@ -30,4 +30,4 @@ someFunc = do
     g <- newStdGen
     play screen white 60 (initialGame g) drawGame handleGame updateGame 
     where
-        screen = InWindow "Doodle Jump" (200, 200) (100, 100)
+        screen = InWindow "Doodle Jump" (320, 480) (100, 100)

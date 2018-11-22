@@ -4,30 +4,38 @@ module Objects (
 ) where
 
 import Types
+import Settings
 import Graphics.Gloss
 import System.IO.Unsafe (unsafePerformIO)
 
-cnst :: Float
-cnst = 10
+debugPosition :: Position -> Picture
+debugPosition (Position x y) = printX <> printY
+  where
+    printX = Translate (-100) 100 (scale 0.2 0.2 (Text (show x)))
+    printY = Translate 100 100 (scale 0.2 0.2 (Text (show y)))
+
+windowDebug :: Picture
+windowDebug = Color red $ rectangleWire (windowWidth * 20) (windowHeight * 20)
 
 floorTile :: Picture
---floorTile = Color green (rectangleSolid (5 * cnst)  (1 * cnst) )
+-- floorTile = (unsafePerformIO $ loadBMP "src/assets/p-green.bmp")
+--   <> (Color red $ rectangleWire (5 * blockSize) (1 * blockSize))
 floorTile = unsafePerformIO $ loadBMP "src/assets/p-green.bmp"
 
- 
 playerTile :: Picture
---playerTile = Color red (rectangleSolid (1 * cnst) (1 * cnst))
-playerTile = (scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleL.bmp") <> Color red (rectangleWire (3 * cnst) (3 * cnst))
-
+-- playerTile = (scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleL.bmp")
+--   <> Color red (rectangleWire (3 * blockSize) (3 * blockSize))
+playerTile = scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleL.bmp"
 
 blockTile :: Picture
 blockTile = Color blue (rectangleSolid 1 1)
 
 drawAt :: Position -> Picture -> Picture
-drawAt (Position x y) obj = Translate (x * cnst) (y *cnst) obj
+drawAt (Position x y) obj = Translate (x * blockSize) (y * blockSize) obj
 
 simple :: Game -> Picture
-simple (Game (Player (Position x y) _ _ ) (LevelPattern pl)) =drawPlatforms <> drawAt (Position x y) playerTile 
+simple (Game (Player (Position x y) _ _ ) (LevelPattern pl)) = drawPlatforms 
+  <> drawAt (Position x y) playerTile
   where
     drawPlatforms :: Picture
     drawPlatforms = foldl (<>) Blank (map (\(Platform pos _ _) -> drawAt pos floorTile) pl)

@@ -1,4 +1,5 @@
 module Settings (
+  blockSize,
   gravityConst,
   speedConst,
   jumpConst,
@@ -13,6 +14,9 @@ module Settings (
 gravityConst :: Float
 gravityConst = 2
 
+blockSize :: Float
+blockSize = 10
+
 speedConst :: Float
 speedConst = 0.1
 
@@ -21,12 +25,12 @@ jumpConst = 0.3
 
 jumpVel, speedVel :: Float
 jumpVel = 0.1
-speedVel = 0.5
+speedVel = 0.1
 
 playerWidth, playerHeight :: Float
 playerWidth  = 3
 playerHeight = 3
 
 windowWidth, windowHeight :: Float
-windowWidth = 10
-windowHeight = 10
+windowWidth = 16
+windowHeight = 24

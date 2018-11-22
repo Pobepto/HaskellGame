@@ -11,7 +11,7 @@ import Types
 import Settings
 
 handleGame :: Event -> Game -> Game
-handleGame (EventKey (SpecialKey KeyLeft) up _ _ )  game = _action game LEFT
+handleGame (EventKey (SpecialKey KeyLeft)  up _ _) game = _action game LEFT
 handleGame (EventKey (SpecialKey KeyRight) up _ _) game = _action game RIGHT
 handleGame _ game                  = game
 
@@ -46,10 +46,13 @@ isCollision (Position x y) (LevelPattern pl) = or check
   where
     check = map (\(Platform (Position plX plY) width height) -> collision plX plY width height) pl
     collision plX plY width height
-      | x < realX + (width + 1) &&
-        x + playerWidth > realX &&
-        y < plY + height &&
-        playerHeight + y > plY = True
+      | realPlayerX < realPlatformX + width &&
+        realPlayerX + playerWidth > realPlatformX &&
+        realPlayerY < realPlatformY + height &&
+        playerHeight + realPlayerY > realPlatformY = True
       | otherwise = False
       where
-        realX = plX + (-width / 2)
+        realPlayerX = x - (playerWidth / 2)
+        realPlayerY = y - (playerHeight / 2)
+        realPlatformX = plX - (width / 2)
+        realPlatformY = plY - (height / 2)
