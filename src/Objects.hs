@@ -50,6 +50,7 @@ simple Menu   = startScreen
 simple Defeat = defeatScreen
 simple (Game (Player (Position x y) _ _ dir) (LevelPattern pl)) = drawPlatforms 
   <> drawDirPlayer dir
+  <> windowDebug
   where
     drawPlatforms :: Picture
     drawPlatforms = foldl (<>) Blank (map (\(Platform pos _ _ plType _) -> drawAt pos $ floorTile plType) pl)

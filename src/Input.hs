@@ -8,6 +8,7 @@ import Graphics.Gloss.Interface.IO.Interact
 import Types
 import Settings
 import Levels
+import Utils
 
 handleGame :: Event -> GameState -> GameState
 handleGame (EventKey (SpecialKey KeySpace) up _ _) state =
@@ -57,20 +58,9 @@ gravity dt (Game (Player pos vel mass dir) platforms)
       | otherwise          = Velocity x' y'
 
 isCollision :: Position -> LevelPattern -> Bool
-isCollision (Position x y) (LevelPattern pl) = or check
+isCollision playerPos (LevelPattern platforms) = or check
   where
-    check = map (\(Platform (Position plX plY) width height _ _) -> collision plX plY width height) pl
-    collision plX plY width height
-      | realPlayerX < realPlatformX + width &&
-        realPlayerX + playerWidth > realPlatformX &&
-        realPlayerY < realPlatformY + height &&
-        playerHeight + realPlayerY > realPlatformY = True
-      | otherwise = False
-      where
-        realPlayerX = x - (playerWidth / 2)
-        realPlayerY = y - (playerHeight / 2)
-        realPlatformX = plX - (width / 2)
-        realPlatformY = plY - (height / 2)
+    check = map (\pl -> checkCollision playerPos pl) platforms
 
 isDefeat :: Position -> Velocity -> Bool
 isDefeat (Position x y) (Velocity x' y')

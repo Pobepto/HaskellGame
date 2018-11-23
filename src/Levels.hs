@@ -7,9 +7,9 @@ module Levels (
 import System.Random
 import Types
 import Settings
+import Utils
 
-level_1 :: LevelPattern
-level_1 = LevelPattern [
+level_2 = LevelPattern [
       -- (Platform (Position (-4) (20)) 5 1),
       -- (Platform (Position 4 (15)) 5 1),
 
@@ -17,18 +17,24 @@ level_1 = LevelPattern [
       -- (Platform (Position 4 (5)) 5 1),
       -- (Platform (Position (-4) (0)) 5 1)
       (Platform (Position 4 (-5)) 5 1 GREEN LEFT),
-      (Platform (Position (-5) (0)) 5 1 GREEN LEFT)
+      (Platform (Position (-5) (0)) 5 1 WHITE LEFT)
       -- (Platform (Position (-4) (-10)) 5 1),
       -- (Platform (Position 4 (-15)) 5 1)
       --(Platform (Position 0 0) 5 1)
     ]
 
-level_2 = LevelPattern [
+level_1 = LevelPattern [
+  (Platform (Position 0 5) 5 1 WHITE LEFT),
+  (Platform (Position 0 15) 5 1 WHITE LEFT),
+  (Platform (Position 0 10) 5 1 WHITE LEFT),
+    (Platform (Position 0 (-10)) 5 1 WHITE LEFT),
+    (Platform (Position 0 0) 5 1 WHITE LEFT),
+    (Platform (Position 0 (-5)) 5 1 WHITE LEFT)
     ]
 
 level_3 = LevelPattern [
-      (Platform (Position (-4) 30) 5 1 BLUE LEFT),
-      (Platform (Position 4 25) 5 1 WHITE LEFT)
+      -- (Platform (Position (-4) 30) 5 1 BLUE LEFT),
+      (Platform (Position 0 25) 5 1 WHITE LEFT)
     ]
 
 getLevel :: Int -> LevelPattern
@@ -50,12 +56,13 @@ getInitialLevels1 = LevelPattern combine
     combine = (getPlatforms level_3)
 
 updatePlatforms :: Player -> LevelPattern -> LevelPattern
-updatePlatforms (Player (Position _ y) (Velocity _ y') _ _) (LevelPattern platforms)
+updatePlatforms (Player (Position x y) (Velocity _ y') _ _) (LevelPattern platforms)
   | y + y' > 0 = LevelPattern 
     $ filterPlatforms 
     $ ((map (\pl -> updatePosY pl) platforms)
     ++ (plusplusAccept platforms (getPlatforms getInitialLevels1)))
-  | otherwise = LevelPattern ((map (\pl -> updatePosX pl) platforms))
+  | otherwise = LevelPattern 
+    $ filterPlatforms (map (\pl -> updatePosX pl) platforms)
   where
     plusplusAccept :: [Platform] -> [Platform] -> [Platform]
     plusplusAccept a b
@@ -82,7 +89,14 @@ updatePlatforms (Player (Position _ y) (Velocity _ y') _ _) (LevelPattern platfo
       | otherwise = Platform (Position (plX + shiftX) plY) w h BLUE RIGHT
     updatePosX pl = pl
     filterPlatforms :: [Platform] -> [Platform]
-    filterPlatforms xs = filter (\(Platform (Position _ plY) _ _ _ _) -> plY > -windowHeight) xs
+    filterPlatforms xs = filter (\pl -> check pl) xs
+      where
+        check (Platform (Position plX plY) w h plType dir) = outside && not (findWhiteCollision plType)
+          where
+            outside = plY > -windowHeight
+            findWhiteCollision :: PlatformType -> Bool
+            findWhiteCollision WHITE = checkCollision (Position x y) (Platform (Position plX plY) w h plType dir)
+            findWhiteCollision _ = False
     shiftY 
       | y' < 0 = 0
       | otherwise = y'
