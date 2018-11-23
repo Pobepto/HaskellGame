@@ -17,6 +17,9 @@ debugPosition (Position x y) = printX <> printY
 windowDebug :: Picture
 windowDebug = Color red $ rectangleWire (windowWidth * 20) (windowHeight * 20)
 
+background :: Picture
+background = unsafePerformIO $ loadBMP "src/assets/bg.bmp"
+
 floorTile :: PlatformType -> Picture
 -- floorTile = (unsafePerformIO $ loadBMP "src/assets/p-green.bmp")
 --   <> (Color red $ rectangleWire (5 * blockSize) (1 * blockSize))
@@ -46,14 +49,14 @@ drawAt :: Position -> Picture -> Picture
 drawAt (Position x y) obj = Translate (x * blockSize) (y * blockSize) obj
 
 simple :: GameState -> Picture
-simple Menu   = startScreen
-simple Defeat = defeatScreen
+simple Menu   = background <> startScreen
+simple Defeat = background <> defeatScreen
 simple (Game (Player (Position x y) _ _ dir) (LevelPattern pl)) = drawPlatforms 
   <> drawDirPlayer dir
   <> windowDebug
   where
     drawPlatforms :: Picture
-    drawPlatforms = foldl (<>) Blank (map (\(Platform pos _ _ plType _) -> drawAt pos $ floorTile plType) pl)
+    drawPlatforms = background <> foldl (<>) Blank (map (\(Platform pos _ _ plType _) -> drawAt pos $ floorTile plType) pl)
     drawDirPlayer :: Direction -> Picture
     drawDirPlayer LEFT = drawAt (Position x y) playerTileL
     drawDirPlayer RIGHT = drawAt (Position x y) playerTileR
