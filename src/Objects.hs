@@ -53,8 +53,8 @@ drawAt (Position x y) obj = Translate (x * blockSize) (y * blockSize) obj
 
 simple :: GameState -> Picture
 simple Menu   = background <> startScreen
-simple Defeat = background <> defeatScreen
-simple (Game (Player (Position x y) _ _ dir) (LevelPattern pl mn)) = background
+simple (Defeat score) = background <> defeatScreen
+simple (Game (Player (Position x y) _ _ dir) (LevelPattern pl mn) score) = background
   <> drawPlatforms
   <> drawMonsters
   <> drawDirPlayer dir

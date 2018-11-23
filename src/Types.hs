@@ -16,8 +16,12 @@ data Direction = LEFT | RIGHT deriving Eq
 
 data GameState = Game {
   player :: Player,
-  level  :: LevelPattern
-} | Menu | Defeat 
+  level  :: LevelPattern,
+  score :: Int
+} | Menu 
+  | Defeat {
+  score :: Int
+}
 
 data Position = Position
   {
