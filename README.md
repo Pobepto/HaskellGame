@@ -10,8 +10,8 @@ Timur Khazhiev
 #### Works done
 - [x] Implemented movement of player
 - [x] Implemented gravity
+- [x] Add start and defeat screens
+- [x] Add different platforms types
 
 #### Works to do
-- [ ] Add random generation of platforms
 - [ ] Add score points to game
-- [ ] Add start and defeat screens
