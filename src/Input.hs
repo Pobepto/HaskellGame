@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Input (
   handleGame,
   gravity
@@ -18,8 +16,9 @@ handleGame (EventKey (SpecialKey KeySpace) up _ _) state =
           (Position 0 0)
           (Velocity 0 0)
           1
+          LEFT
       )
-      ( getLevel 1 )
+      ( getInitialLevels )
 handleGame (EventKey (SpecialKey KeyLeft)  up _ _) state =
   _action state LEFT
 handleGame (EventKey (SpecialKey KeyRight) up _ _) state =
@@ -27,24 +26,25 @@ handleGame (EventKey (SpecialKey KeyRight) up _ _) state =
 handleGame _ state                  = state
 
 _action :: GameState -> Direction -> GameState
-_action (Game (Player (Position x y) (Velocity velX velY) mass) pl) LEFT = 
-  Game (Player (Position x y) (Velocity (velX - speedConst) velY) mass) pl
-_action (Game (Player (Position x y) (Velocity velX velY) mass) pl) RIGHT = 
-  Game (Player (Position x y) (Velocity (velX + speedConst) velY) mass) pl
+_action Menu _   = Menu
+_action Defeat _ = Defeat
+_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl) LEFT = 
+  Game (Player (Position x y) (Velocity (velX - speedConst) velY) mass LEFT) pl
+_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl) RIGHT = 
+  Game (Player (Position x y) (Velocity (velX + speedConst) velY) mass RIGHT) pl
 
 gravity :: Float -> GameState -> GameState
 gravity _  Menu                                   = Menu
 gravity _  Defeat                                 = Defeat
-gravity dt (Game (Player pos vel mass) platforms)
+gravity dt (Game (Player pos vel mass dir) platforms)
   | isDefeat pos vel = Defeat
-  | otherwise = Game updatePlayer platforms
+  | otherwise = Game updatePlayer (updatePlatforms (Player pos vel mass dir) platforms)
   where
     updatePlayer :: Player
-    updatePlayer = Player (uPos pos vel) (uVel pos vel) mass
+    updatePlayer = Player (uPos pos vel) (uVel pos vel) mass dir
     uPos :: Position -> Velocity -> Position
     uPos (Position x y) (Velocity x' y') 
-      | y + y' > windowHeight = Position (x + x') ((-windowHeight) + y')
-      | y + y' < -windowHeight = Position (x + x') (windowHeight + y')
+      | y + y' > 0 = Position (x + x') y
       | x + x' > windowWidth = Position ((-windowWidth) + x') (y + y')
       | x + x' < -windowWidth = Position (windowWidth + x') (y + y')
       | otherwise = Position (x + x') (y + y')
@@ -59,7 +59,7 @@ gravity dt (Game (Player pos vel mass) platforms)
 isCollision :: Position -> LevelPattern -> Bool
 isCollision (Position x y) (LevelPattern pl) = or check
   where
-    check = map (\(Platform (Position plX plY) width height) -> collision plX plY width height) pl
+    check = map (\(Platform (Position plX plY) width height _ _) -> collision plX plY width height) pl
     collision plX plY width height
       | realPlayerX < realPlatformX + width &&
         realPlayerX + playerWidth > realPlatformX &&

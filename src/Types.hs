@@ -5,6 +5,7 @@ module Types (
   Acceleration (Acceleration),
   Player (Player),
   Platform (Platform),
+  PlatformType (GREEN, BLUE, BROWN, WHITE),
   Direction (LEFT, RIGHT),
   LevelPattern (LevelPattern)
 ) where
@@ -43,12 +44,17 @@ data Player = Player
   {
     playerPosition     :: Position,
     playerVelocity     :: Velocity,
-    playerMass         :: Float
+    playerMass         :: Float,
+    playerDirection    :: Direction
   }
+
+data PlatformType = GREEN | BLUE | BROWN | WHITE
 
 data Platform = Platform
   {
-    platformPosition :: Position,
-    platformWidth    :: Float,
-    platformHeight   :: Float
+    platformPosition  :: Position,
+    platformWidth     :: Float,
+    platformHeight    :: Float,
+    platformType      :: PlatformType,
+    platformDirection :: Direction
   }

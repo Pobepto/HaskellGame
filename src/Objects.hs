@@ -17,15 +17,19 @@ debugPosition (Position x y) = printX <> printY
 windowDebug :: Picture
 windowDebug = Color red $ rectangleWire (windowWidth * 20) (windowHeight * 20)
 
-floorTile :: Picture
+floorTile :: PlatformType -> Picture
 -- floorTile = (unsafePerformIO $ loadBMP "src/assets/p-green.bmp")
 --   <> (Color red $ rectangleWire (5 * blockSize) (1 * blockSize))
-floorTile = unsafePerformIO $ loadBMP "src/assets/p-green.bmp"
+floorTile GREEN = unsafePerformIO $ loadBMP "src/assets/p-green.bmp"
+floorTile BLUE  = unsafePerformIO $ loadBMP "src/assets/p-blue.bmp"
+floorTile BROWN = unsafePerformIO $ loadBMP "src/assets/p-green.bmp"
+floorTile WHITE = unsafePerformIO $ loadBMP "src/assets/p-white.bmp"
 
-playerTile :: Picture
+playerTileL, playerTileR :: Picture
 -- playerTile = (scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleL.bmp")
 --   <> Color red (rectangleWire (3 * blockSize) (3 * blockSize))
-playerTile = scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleL.bmp"
+playerTileL = scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleL.bmp"
+playerTileR = scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleR.bmp"
 
 startScreen :: Picture
 startScreen = drawAt (Position (-10) 0) 
@@ -44,8 +48,12 @@ drawAt (Position x y) obj = Translate (x * blockSize) (y * blockSize) obj
 simple :: GameState -> Picture
 simple Menu   = startScreen
 simple Defeat = defeatScreen
-simple (Game (Player (Position x y) _ _ ) (LevelPattern pl)) = drawPlatforms 
-  <> drawAt (Position x y) playerTile
+simple (Game (Player (Position x y) _ _ dir) (LevelPattern pl)) = drawPlatforms 
+  <> drawDirPlayer dir
   where
     drawPlatforms :: Picture
-    drawPlatforms = foldl (<>) Blank (map (\(Platform pos _ _) -> drawAt pos floorTile) pl)
+    drawPlatforms = foldl (<>) Blank (map (\(Platform pos _ _ plType _) -> drawAt pos $ floorTile plType) pl)
+    drawDirPlayer :: Direction -> Picture
+    drawDirPlayer LEFT = drawAt (Position x y) playerTileL
+    drawDirPlayer RIGHT = drawAt (Position x y) playerTileR
+    
