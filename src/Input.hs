@@ -37,32 +37,41 @@ _action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl) RIGHT =
 gravity :: Float -> GameState -> GameState
 gravity _  Menu                                   = Menu
 gravity _  Defeat                                 = Defeat
-gravity dt (Game (Player pos vel mass dir) platforms)
-  | isDefeat pos vel = Defeat
-  | otherwise = Game updatePlayer (updatePlatforms (Player pos vel mass dir) platforms)
+gravity dt (Game (Player pos vel mass dir) levelPattern)
+  | isDefeat pos vel levelPattern = Defeat
+  | otherwise = Game updatePlayer (updateLevelPatter (Player pos vel mass dir) levelPattern)
   where
     updatePlayer :: Player
     updatePlayer = Player (uPos pos vel) (uVel pos vel) mass dir
     uPos :: Position -> Velocity -> Position
     uPos (Position x y) (Velocity x' y') 
-      | y + y' > 0 = Position (x + x') y
-      | x + x' > windowWidth = Position ((-windowWidth) + x') (y + y')
-      | x + x' < -windowWidth = Position (windowWidth + x') (y + y')
-      | otherwise = Position (x + x') (y + y')
+      | x + x' > windowWidth = Position ((-windowWidth) + x') (newY)
+      | x + x' < -windowWidth = Position (windowWidth + x') (newY)
+      | otherwise = Position (x + x') (newY)
+      where
+        newY 
+          | y + y' > 0 = y
+          | otherwise = y + y'
     uVel :: Position -> Velocity -> Velocity
     uVel (Position x y) (Velocity x' y')
-      | isCollision (Position x (y + y')) platforms = Velocity x' jumpConst
+      | isCollision (Position x (y + y')) levelPattern = Velocity x' jumpConst
       | x' >= 0 && y' >= 0 = Velocity (x' - (speedVel * dt)) (y' - (jumpVel * gravityConst * mass * dt))
       | x' <= 0 && y' >= 0 = Velocity (x' + (speedVel * dt)) (y' - (jumpVel * gravityConst * mass * dt))
       | y' < 0             = Velocity x' (y' - (jumpVel * gravityConst * mass * dt))
       | otherwise          = Velocity x' y'
 
 isCollision :: Position -> LevelPattern -> Bool
-isCollision playerPos (LevelPattern platforms) = or check
+isCollision playerPos (LevelPattern platforms _) = or checkPl
   where
-    check = map (\pl -> checkCollision playerPos pl) platforms
+    checkPl = map (\pl -> checkCollisionWithPlatform playerPos pl) platforms
 
-isDefeat :: Position -> Velocity -> Bool
-isDefeat (Position x y) (Velocity x' y')
+isDefeat :: Position -> Velocity -> LevelPattern -> Bool
+isDefeat
+  (Position x y)
+  (Velocity x' y')
+  (LevelPattern _ monsters)
   | y + y' < -windowHeight = True
+  | or checkMn = True
   | otherwise = False
+  where
+    checkMn = map (\mn -> checkCollisionWithMonster (Position x y) mn) monsters
