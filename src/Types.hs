@@ -8,7 +8,7 @@ module Types (
   PlatformType (GREEN, BLUE, WHITE),
   Direction (LEFT, RIGHT),
   LevelPattern (LevelPattern),
-  MonsterType (MONSTER1),
+  MonsterType (MONSTER1, MONSTER2),
   Monster (Monster)
 ) where
 
@@ -62,7 +62,7 @@ data Platform = Platform
     platformDirection :: Direction
   }
 
-data MonsterType = MONSTER1
+data MonsterType = MONSTER1 | MONSTER2
 
 data Monster = Monster
   {

@@ -15,7 +15,8 @@ level_2 = LevelPattern
     (Platform (Position (-5) (0)) 5 1 WHITE LEFT)
   ]
   [
-    (Monster (Position (-10) 1) 6 6 MONSTER1)
+    (Monster (Position (-10) 1) 6 6 MONSTER1),
+    (Monster (Position (10) 1) 8 8 MONSTER2)
   ]
 
 level_1 = LevelPattern 
@@ -28,7 +29,8 @@ level_1 = LevelPattern
     (Platform (Position 0 (-5)) 5 1 WHITE LEFT)
   ]
   [
-    (Monster (Position (-10) 1) 6 6 MONSTER1)
+    (Monster (Position (-10) 1) 6 6 MONSTER1),
+    (Monster (Position (10) 1) 8 8 MONSTER2)
   ]
 
 level_3 = LevelPattern 
@@ -36,7 +38,8 @@ level_3 = LevelPattern
     (Platform (Position 0 25) 5 1 WHITE LEFT)
   ]
   [
-    (Monster (Position (-10) 1) 6 6 MONSTER1)
+    (Monster (Position (-10) 1) 6 6 MONSTER1),
+    (Monster (Position (10) 1) 8 8 MONSTER2)
   ]
 
 

@@ -35,6 +35,7 @@ playerTileR = scale (0.8) (0.8) $ unsafePerformIO $ loadBMP "src/assets/doodle_s
 
 monsterTile :: MonsterType -> Picture
 monsterTile MONSTER1 = (unsafePerformIO $ loadBMP "src/assets/monster_1.bmp")
+monsterTile MONSTER2 = (unsafePerformIO $ loadBMP "src/assets/hole.bmp")
 
 startScreen :: Picture
 startScreen = drawAt (Position (-10) 0) 
