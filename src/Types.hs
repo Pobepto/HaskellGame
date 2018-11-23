@@ -1,5 +1,5 @@
 module Types (
-  Game (Game),
+  GameState (Game, Menu, Defeat),
   Position (Position),
   Velocity (Velocity),
   Acceleration (Acceleration),
@@ -11,11 +11,10 @@ module Types (
 
 data Direction = LEFT | RIGHT deriving Eq
 
-data Game = Game
-  {
-    player :: Player,
-    level  :: LevelPattern
-  }
+data GameState = Game {
+  player :: Player,
+  level  :: LevelPattern
+} | Menu | Defeat 
 
 data Position = Position
   {

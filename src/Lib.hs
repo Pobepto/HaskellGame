@@ -10,19 +10,13 @@ import Input
 import Levels
 import Utils
 
-initialGame :: StdGen -> Game
-initialGame rnd = Game
-    (Player
-        (Position 0 0)
-        (Velocity 0 0)
-        1
-    )
-    ( getLevel $ getRandomInt rnd 1 10 )
+initialGame :: StdGen -> GameState
+initialGame rnd = Menu
 
-updateGame :: Float -> Game -> Game
+updateGame :: Float -> GameState -> GameState
 updateGame dt game = gravity dt game
 
-drawGame :: Game -> Picture
+drawGame :: GameState -> Picture
 drawGame game = simple game
 
 someFunc :: IO ()

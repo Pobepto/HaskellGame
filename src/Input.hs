@@ -9,20 +9,35 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Interact
 import Types
 import Settings
+import Levels
 
-handleGame :: Event -> Game -> Game
-handleGame (EventKey (SpecialKey KeyLeft)  up _ _) game = _action game LEFT
-handleGame (EventKey (SpecialKey KeyRight) up _ _) game = _action game RIGHT
-handleGame _ game                  = game
+handleGame :: Event -> GameState -> GameState
+handleGame (EventKey (SpecialKey KeySpace) up _ _) state =
+  Game
+      (Player
+          (Position 0 0)
+          (Velocity 0 0)
+          1
+      )
+      ( getLevel 1 )
+handleGame (EventKey (SpecialKey KeyLeft)  up _ _) state =
+  _action state LEFT
+handleGame (EventKey (SpecialKey KeyRight) up _ _) state =
+  _action state RIGHT
+handleGame _ state                  = state
 
-_action :: Game -> Direction -> Game
+_action :: GameState -> Direction -> GameState
 _action (Game (Player (Position x y) (Velocity velX velY) mass) pl) LEFT = 
   Game (Player (Position x y) (Velocity (velX - speedConst) velY) mass) pl
 _action (Game (Player (Position x y) (Velocity velX velY) mass) pl) RIGHT = 
   Game (Player (Position x y) (Velocity (velX + speedConst) velY) mass) pl
 
-gravity :: Float -> Game -> Game
-gravity dt (Game (Player pos vel mass) platforms) = Game updatePlayer platforms
+gravity :: Float -> GameState -> GameState
+gravity _  Menu                                   = Menu
+gravity _  Defeat                                 = Defeat
+gravity dt (Game (Player pos vel mass) platforms)
+  | isDefeat pos vel = Defeat
+  | otherwise = Game updatePlayer platforms
   where
     updatePlayer :: Player
     updatePlayer = Player (uPos pos vel) (uVel pos vel) mass
@@ -56,3 +71,8 @@ isCollision (Position x y) (LevelPattern pl) = or check
         realPlayerY = y - (playerHeight / 2)
         realPlatformX = plX - (width / 2)
         realPlatformY = plY - (height / 2)
+
+isDefeat :: Position -> Velocity -> Bool
+isDefeat (Position x y) (Velocity x' y')
+  | y + y' < -windowHeight = True
+  | otherwise = False

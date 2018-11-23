@@ -24,4 +24,4 @@ level_2 = LevelPattern [
 getLevel :: Int -> LevelPattern
 getLevel level_id
   | level_id <= 5 = level_1
-  | otherwise = level_1
+  | otherwise = level_2
