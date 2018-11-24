@@ -5,11 +5,9 @@ module Types (
   Acceleration (Acceleration),
   Player (Player),
   Platform (Platform),
-  PlatformType (GREEN, BLUE, WHITE),
+  PlatformType (GREEN, BLUE, WHITE, MONSTER1, MONSTER2),
   Direction (LEFT, RIGHT),
   LevelPattern (LevelPattern),
-  MonsterType (MONSTER1, MONSTER2),
-  Monster (Monster)
 ) where
 
 data Direction = LEFT | RIGHT deriving Eq
@@ -43,8 +41,7 @@ data Acceleration = Acceleration
   
 data LevelPattern = LevelPattern
   {
-    platforms :: [Platform],
-    monsters  :: [Monster]
+    platforms :: [Platform]
   }
 
 data Player = Player
@@ -55,7 +52,7 @@ data Player = Player
     playerDirection    :: Direction
   }
 
-data PlatformType = GREEN | BLUE | WHITE
+data PlatformType = GREEN | BLUE | WHITE | MONSTER1 | MONSTER2 deriving Eq
 
 data Platform = Platform
   {
@@ -66,12 +63,3 @@ data Platform = Platform
     platformDirection :: Direction
   }
 
-data MonsterType = MONSTER1 | MONSTER2
-
-data Monster = Monster
-  {
-    monsterPosition :: Position,
-    monsterWidth    :: Float,
-    monsterHeight   :: Float,
-    monsterType     :: MonsterType
-  }

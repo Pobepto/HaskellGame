@@ -65,17 +65,20 @@ gravity dt (Game (Player pos vel mass dir) levelPattern score)
       | otherwise          = Velocity x' y'
 
 isCollision :: Position -> LevelPattern -> Bool
-isCollision playerPos (LevelPattern platforms _) = or checkPl
+isCollision playerPos (LevelPattern platforms ) = or checkPl
   where
-    checkPl = map (\pl -> checkCollisionWithPlatform playerPos pl) platforms
+    checkPl = map (\pl -> checkCollision playerPos pl) platforms
+
 
 isDefeat :: Position -> Velocity -> LevelPattern -> Bool
 isDefeat
   (Position x y)
   (Velocity x' y')
-  (LevelPattern _ monsters)
+  (LevelPattern platforms)
   | y + y' < -windowHeight = True
   | or checkMn = True
   | otherwise = False
-  where
-    checkMn = map (\mn -> checkCollisionWithMonster (Position x y) mn) monsters
+    where
+       checkMn = map (\mn -> checkCollision (Position x y) mn) (filter (\pl -> isMonster pl) platforms)
+       isMonster :: Platform -> Bool
+       isMonster (Platform _ _ _ t _) = t == MONSTER1 || t == MONSTER2
