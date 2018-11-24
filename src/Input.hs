@@ -10,8 +10,8 @@ import Settings
 import Levels
 import Utils
 
-handleGame :: Event -> GameState -> GameState
-handleGame (EventKey (SpecialKey KeySpace) up _ _) state =
+handleGame :: [Int] -> Event -> GameState -> GameState
+handleGame rnd (EventKey (SpecialKey KeySpace) up _ _) state =
   Game
       (Player
           (Position 0 0)
@@ -21,26 +21,27 @@ handleGame (EventKey (SpecialKey KeySpace) up _ _) state =
       )
       ( getInitialLevels )
       0
-handleGame (EventKey (SpecialKey KeyLeft)  up _ _) state =
+      rnd
+handleGame _ (EventKey (SpecialKey KeyLeft)  up _ _) state =
   _action state LEFT
-handleGame (EventKey (SpecialKey KeyRight) up _ _) state =
+handleGame _ (EventKey (SpecialKey KeyRight) up _ _) state =
   _action state RIGHT
-handleGame _ state                  = state
+handleGame _ _ state                  = state
 
 _action :: GameState -> Direction -> GameState
 _action Menu _   = Menu
 _action (Defeat score) _ = (Defeat score)
-_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl score) LEFT = 
-  Game (Player (Position x y) (Velocity (velX - speedConst) velY) mass LEFT) pl score
-_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl score) RIGHT = 
-  Game (Player (Position x y) (Velocity (velX + speedConst) velY) mass RIGHT) pl score
+_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl score rnd) LEFT = 
+  Game (Player (Position x y) (Velocity (velX - speedConst) velY) mass LEFT) pl score rnd
+_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl score rnd) RIGHT = 
+  Game (Player (Position x y) (Velocity (velX + speedConst) velY) mass RIGHT) pl score rnd
 
 gravity :: Float -> GameState -> GameState
 gravity _  Menu                                   = Menu
 gravity _  (Defeat score)                         = (Defeat score)
-gravity dt (Game (Player pos vel mass dir) levelPattern score)
+gravity dt (Game (Player pos vel mass dir) levelPattern score (rndLevel:rnd))
   | isDefeat pos vel levelPattern = (Defeat score)
-  | otherwise = Game updatePlayer (updateLevelPatter (Player pos vel mass dir) levelPattern) (newScore pos vel)
+  | otherwise = Game updatePlayer (updateLevelPatter (Player pos vel mass dir) levelPattern rndLevel score) (newScore pos vel) rnd
   where
     newScore (Position _ y) (Velocity _ y') 
       | y + y' > 0 = max score (score + round (y' * blockSize))

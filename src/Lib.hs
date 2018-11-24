@@ -10,8 +10,8 @@ import Input
 import Levels
 import Utils
 
-initialGame :: StdGen -> GameState
-initialGame rnd = Menu
+initialGame :: GameState
+initialGame = Menu
 
 updateGame :: Float -> GameState -> GameState
 updateGame dt game = gravity dt game
@@ -22,6 +22,6 @@ drawGame game = simple game
 someFunc :: IO ()
 someFunc = do
     g <- newStdGen
-    play screen white 60 (initialGame g) drawGame handleGame updateGame 
+    play screen white 60 initialGame drawGame (handleGame (randomRs (1,3) g)) updateGame 
     where
         screen = InWindow "Doodle Jump" (320, 480) (100, 100)

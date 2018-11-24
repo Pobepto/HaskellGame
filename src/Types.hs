@@ -15,7 +15,8 @@ data Direction = LEFT | RIGHT deriving Eq
 data GameState = Game {
   player :: Player,
   level  :: LevelPattern,
-  score :: Int
+  score  :: Int,
+  rnd    :: [Int]
 } | Menu 
   | Defeat {
   score :: Int

@@ -9,24 +9,27 @@ import Types
 import Settings
 import Utils
 
---getLevel :: Int -> LevelPattern
---getLevel level_id
---  | level_id <= 5 = level_1
---  | otherwise = init_level
+getLevel :: Int -> Int -> LevelPattern
+getLevel lvl score
+ | lvl == 1 && score <= 500 = level_e_1
+ | lvl == 2 && score <= 500 = level_e_2
+ | lvl == 3 && score <= 500 = level_e_3
+ | lvl == 1 && score <= 1000 = level_m_1
+ | lvl == 2 && score <= 1000 = level_m_2
+ | lvl == 3 && score <= 1000 = level_m_3
+ | lvl == 1 && score <= 2000 = level_h_1
+ | lvl == 2 && score <= 2000 = level_h_2
+ | lvl == 3 && score <= 2000 = level_h_3
+ | otherwise = level_h_2
 
 getPlatforms :: LevelPattern -> [Platform]
 getPlatforms (LevelPattern platforms) = platforms
 
 
-
 getInitialLevels :: LevelPattern
 getInitialLevels = init_level
 
--- random level
-getInitialLevels1 :: LevelPattern
-getInitialLevels1 = level_h_3
-
-updateLevelPatter :: Player -> LevelPattern -> LevelPattern
+updateLevelPatter :: Player -> LevelPattern -> Int -> Int -> LevelPattern
 updateLevelPatter 
   (Player (Position x y) (Velocity _ y') _ _)
   (LevelPattern platforms)
