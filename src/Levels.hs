@@ -17,9 +17,9 @@ getLevel lvl score
  | lvl == 1 && score <= 1000 = level_m_1
  | lvl == 2 && score <= 1000 = level_m_2
  | lvl == 3 && score <= 1000 = level_m_3
- | lvl == 1 && score <= 2000 = level_h_1
- | lvl == 2 && score <= 2000 = level_h_2
- | lvl == 3 && score <= 2000 = level_h_3
+ | lvl == 1 && score > 1000 = level_h_1
+ | lvl == 2 && score > 1000 = level_h_2
+ | lvl == 3 && score > 1000 = level_h_3
  | otherwise = level_h_2
 
 getPlatforms :: LevelPattern -> [Platform]
