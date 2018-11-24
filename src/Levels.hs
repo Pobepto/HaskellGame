@@ -33,10 +33,12 @@ updateLevelPatter :: Player -> LevelPattern -> Int -> Int -> LevelPattern
 updateLevelPatter 
   (Player (Position x y) (Velocity _ y') _ _)
   (LevelPattern platforms)
+  rndLevel
+  score
   | y + y' > 0 = LevelPattern 
     (filterPlatforms 
     $ ((map (\pl -> updatePlatformPosY pl) platforms)
-    ++ (plusplusAccept platforms (getPlatforms getInitialLevels1))))
+    ++ (plusplusAccept platforms (getPlatforms (getLevel rndLevel score)))))
   | otherwise = LevelPattern (filterPlatforms (map (\pl -> updatePlatformPosX pl) platforms))
   where
     plusplusAccept :: [Platform] -> [Platform] -> [Platform]
