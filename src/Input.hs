@@ -20,6 +20,7 @@ handleGame (EventKey (SpecialKey KeySpace) up _ _) state =
           LEFT
       )
       ( getInitialLevels )
+      0
 handleGame (EventKey (SpecialKey KeyLeft)  up _ _) state =
   _action state LEFT
 handleGame (EventKey (SpecialKey KeyRight) up _ _) state =
@@ -28,19 +29,22 @@ handleGame _ state                  = state
 
 _action :: GameState -> Direction -> GameState
 _action Menu _   = Menu
-_action Defeat _ = Defeat
-_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl) LEFT = 
-  Game (Player (Position x y) (Velocity (velX - speedConst) velY) mass LEFT) pl
-_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl) RIGHT = 
-  Game (Player (Position x y) (Velocity (velX + speedConst) velY) mass RIGHT) pl
+_action (Defeat score) _ = (Defeat score)
+_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl score) LEFT = 
+  Game (Player (Position x y) (Velocity (velX - speedConst) velY) mass LEFT) pl score
+_action (Game (Player (Position x y) (Velocity velX velY) mass dir) pl score) RIGHT = 
+  Game (Player (Position x y) (Velocity (velX + speedConst) velY) mass RIGHT) pl score
 
 gravity :: Float -> GameState -> GameState
 gravity _  Menu                                   = Menu
-gravity _  Defeat                                 = Defeat
-gravity dt (Game (Player pos vel mass dir) levelPattern)
-  | isDefeat pos vel levelPattern = Defeat
-  | otherwise = Game updatePlayer (updateLevelPatter (Player pos vel mass dir) levelPattern)
+gravity _  (Defeat score)                         = (Defeat score)
+gravity dt (Game (Player pos vel mass dir) levelPattern score)
+  | isDefeat pos vel levelPattern = (Defeat score)
+  | otherwise = Game updatePlayer (updateLevelPatter (Player pos vel mass dir) levelPattern) (newScore pos vel)
   where
+    newScore (Position _ y) (Velocity _ y') 
+      | y + y' > 0 = max score (score + round (y' * blockSize))
+      | otherwise = score
     updatePlayer :: Player
     updatePlayer = Player (uPos pos vel) (uVel pos vel) mass dir
     uPos :: Position -> Velocity -> Position
@@ -48,7 +52,7 @@ gravity dt (Game (Player pos vel mass dir) levelPattern)
       | x + x' > windowWidth = Position ((-windowWidth) + x') (newY)
       | x + x' < -windowWidth = Position (windowWidth + x') (newY)
       | otherwise = Position (x + x') (newY)
-      where
+       where
         newY 
           | y + y' > 0 = y
           | otherwise = y + y'
