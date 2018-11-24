@@ -15,8 +15,8 @@ checkCollisionWithPlatform :: Position -> Platform -> Bool
 checkCollisionWithPlatform (Position x y) (Platform (Position plX plY) width height _ _)
   | realPlayerX < realPlatformX + width &&
     realPlayerX + playerWidth > realPlatformX &&
-    realPlayerY < realPlatformY + height &&
-    playerHeight + realPlayerY > realPlatformY = True
+    realPlayerY < realPlatformY + height  &&
+    playerHeight / 20 + realPlayerY > realPlatformY = True
   | otherwise = False
   where
     realPlayerX = x - (playerWidth / 2)
