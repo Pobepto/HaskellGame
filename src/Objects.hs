@@ -35,7 +35,8 @@ floorTile WHITE = unsafePerformIO $ loadBMP "src/assets/p-white.bmp"
 playerTileL, playerTileR :: Picture
 -- playerTile = (scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleL.bmp")
 --   <> Color red (rectangleWire (3 * blockSize) (3 * blockSize))
-playerTileL = scale (0.8) (0.8) $ unsafePerformIO $ loadBMP "src/assets/doodle_s_L.bmp"
+playerTileL = (scale (0.8) (0.8) $ unsafePerformIO $ loadBMP "src/assets/doodle_s_L.bmp")
+--  <> Color red (Translate 0 (-1.5 * blockSize) (rectangleWire (3 * blockSize) (1.5 * blockSize)))
 playerTileR = scale (0.8) (0.8) $ unsafePerformIO $ loadBMP "src/assets/doodle_s_R.bmp"
 
 monsterTile :: MonsterType -> Picture
@@ -63,7 +64,7 @@ simple (Game (Player (Position x y) _ _ dir) (LevelPattern pl mn) score) = backg
   <> drawPlatforms
   <> drawMonsters
   <> drawDirPlayer dir
-  <> windowDebug
+--  <> windowDebug
   <> showScore score
   where
     drawPlatforms :: Picture
