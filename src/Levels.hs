@@ -111,7 +111,7 @@ updateLevelPatter
       where
         check (Platform (Position plX plY) w h plType dir) = outside && not (findWhiteCollision plType)
           where
-            outside = plY > -windowHeight
+            outside = (plY + h)> -windowHeight
             findWhiteCollision :: PlatformType -> Bool
             findWhiteCollision WHITE = 
               checkCollisionWithPlatform 
@@ -119,7 +119,7 @@ updateLevelPatter
                 (Platform (Position plX plY) w h plType dir)
             findWhiteCollision _ = False
     filterMonsters :: [Monster] -> [Monster]
-    filterMonsters xs = filter (\(Monster (Position _ y) _ _ _) -> y > -windowHeight) xs
+    filterMonsters xs = filter (\(Monster (Position _ y) _ h _) -> (y + h)  > -windowHeight) xs
     shiftY 
       | y' < 0 = 0
       | otherwise = y'

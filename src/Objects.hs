@@ -14,6 +14,11 @@ debugPosition (Position x y) = printX <> printY
     printX = Translate (-100) 100 (scale 0.2 0.2 (Text (show x)))
     printY = Translate 100 100 (scale 0.2 0.2 (Text (show y)))
 
+
+showScore :: Int -> Picture
+showScore y = Translate (-150) 220 (scale 0.1 0.1 (Text ("Score: " <> (show y))))
+
+
 windowDebug :: Picture
 windowDebug = Color red $ rectangleWire (windowWidth * 20) (windowHeight * 20)
 
@@ -53,12 +58,13 @@ drawAt (Position x y) obj = Translate (x * blockSize) (y * blockSize) obj
 
 simple :: GameState -> Picture
 simple Menu   = background <> startScreen
-simple (Defeat score) = background <> defeatScreen
+simple (Defeat score) = background <> defeatScreen <> (showScore score)
 simple (Game (Player (Position x y) _ _ dir) (LevelPattern pl mn) score) = background
   <> drawPlatforms
   <> drawMonsters
   <> drawDirPlayer dir
   <> windowDebug
+  <> showScore score
   where
     drawPlatforms :: Picture
     drawPlatforms = foldl (<>) Blank (map (\(Platform pos _ _ plType _) -> drawAt pos $ floorTile plType) pl)

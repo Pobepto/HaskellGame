@@ -40,8 +40,11 @@ gravity _  Menu                                   = Menu
 gravity _  (Defeat score)                         = (Defeat score)
 gravity dt (Game (Player pos vel mass dir) levelPattern score)
   | isDefeat pos vel levelPattern = (Defeat score)
-  | otherwise = Game updatePlayer (updateLevelPatter (Player pos vel mass dir) levelPattern) score
+  | otherwise = Game updatePlayer (updateLevelPatter (Player pos vel mass dir) levelPattern) (newScore pos vel)
   where
+    newScore (Position _ y) (Velocity _ y') 
+      | y + y' > 0 = max score (score + round (y' * blockSize))
+      | otherwise = score
     updatePlayer :: Player
     updatePlayer = Player (uPos pos vel) (uVel pos vel) mass dir
     uPos :: Position -> Velocity -> Position
@@ -49,7 +52,7 @@ gravity dt (Game (Player pos vel mass dir) levelPattern score)
       | x + x' > windowWidth = Position ((-windowWidth) + x') (newY)
       | x + x' < -windowWidth = Position (windowWidth + x') (newY)
       | otherwise = Position (x + x') (newY)
-      where
+       where
         newY 
           | y + y' > 0 = y
           | otherwise = y + y'
