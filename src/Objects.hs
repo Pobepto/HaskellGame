@@ -31,6 +31,8 @@ floorTile :: PlatformType -> Picture
 floorTile GREEN = unsafePerformIO $ loadBMP "src/assets/p-green.bmp"
 floorTile BLUE  = unsafePerformIO $ loadBMP "src/assets/p-blue.bmp"
 floorTile WHITE = unsafePerformIO $ loadBMP "src/assets/p-white.bmp"
+floorTile MONSTER1 = (unsafePerformIO $ loadBMP "src/assets/monster_1.bmp")
+floorTile MONSTER2 = (unsafePerformIO $ loadBMP "src/assets/hole.bmp")
 
 playerTileL, playerTileR :: Picture
 -- playerTile = (scale (0.5) (0.5) $ unsafePerformIO $ loadBMP "src/assets/doodleL.bmp")
@@ -39,9 +41,6 @@ playerTileL = (scale (0.8) (0.8) $ unsafePerformIO $ loadBMP "src/assets/doodle_
 --  <> Color red (Translate 0 (-1.5 * blockSize) (rectangleWire (3 * blockSize) (1.5 * blockSize)))
 playerTileR = scale (0.8) (0.8) $ unsafePerformIO $ loadBMP "src/assets/doodle_s_R.bmp"
 
-monsterTile :: MonsterType -> Picture
-monsterTile MONSTER1 = (unsafePerformIO $ loadBMP "src/assets/monster_1.bmp")
-monsterTile MONSTER2 = (unsafePerformIO $ loadBMP "src/assets/hole.bmp")
 
 startScreen :: Picture
 startScreen = drawAt (Position (-10) 0) 
@@ -60,17 +59,17 @@ drawAt (Position x y) obj = Translate (x * blockSize) (y * blockSize) obj
 simple :: GameState -> Picture
 simple Menu   = background <> startScreen
 simple (Defeat score) = background <> defeatScreen <> (showScore score)
-simple (Game (Player (Position x y) _ _ dir) (LevelPattern pl mn) score) = background
+simple (Game (Player (Position x y) _ _ dir) (LevelPattern pl) score _) = background
   <> drawPlatforms
-  <> drawMonsters
+--  <> drawMonsters
   <> drawDirPlayer dir
 --  <> windowDebug
   <> showScore score
   where
     drawPlatforms :: Picture
     drawPlatforms = foldl (<>) Blank (map (\(Platform pos _ _ plType _) -> drawAt pos $ floorTile plType) pl)
-    drawMonsters :: Picture
-    drawMonsters = foldl (<>) Blank (map (\(Monster pos _ _ mnType) -> drawAt pos $ monsterTile mnType) mn)
+--    drawMonsters :: Picture
+--    drawMonsters = foldl (<>) Blank (map (\(Monster pos _ _ mnType) -> drawAt pos $ monsterTile mnType) mn)
     drawDirPlayer :: Direction -> Picture
     drawDirPlayer LEFT = drawAt (Position x y) playerTileL
     drawDirPlayer RIGHT = drawAt (Position x y) playerTileR
