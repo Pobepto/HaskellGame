@@ -1,5 +1,5 @@
 module Levels (
-  getLevel,
+--  getLevel,
   getInitialLevels,
   updateLevelPatter
 ) where
@@ -9,10 +9,10 @@ import Types
 import Settings
 import Utils
 
-getLevel :: Int -> LevelPattern
-getLevel level_id
-  | level_id <= 5 = level_1
-  | otherwise = init_level
+--getLevel :: Int -> LevelPattern
+--getLevel level_id
+--  | level_id <= 5 = level_1
+--  | otherwise = init_level
 
 getPlatforms :: LevelPattern -> [Platform]
 getPlatforms (LevelPattern platforms _) = platforms
@@ -32,7 +32,7 @@ getInitialLevels = init_level
 
 -- random level
 getInitialLevels1 :: LevelPattern
-getInitialLevels1 = level_e_1
+getInitialLevels1 = level_h_3
 
 updateLevelPatter :: Player -> LevelPattern -> LevelPattern
 updateLevelPatter 
@@ -43,15 +43,27 @@ updateLevelPatter
     $ ((map (\pl -> updatePlatformPosY pl) platforms)
     ++ (plusplusAccept platforms (getPlatforms getInitialLevels1))))
     (filterMonsters
-    $ map (\mn -> updateMonsterPosY mn) monsters)
+    $ (map (\mn -> updateMonsterPosY mn) monsters) 
+    ++ (plusplusAcceptMonster monsters (getMonsters getInitialLevels1)))
   | otherwise = LevelPattern (filterPlatforms (map (\pl -> updatePlatformPosX pl) platforms)) monsters
   where
+    plusplusAcceptMonster :: [Monster] -> [Monster] -> [Monster]
+    plusplusAcceptMonster a b
+      | length a == 0 = b 
+      | comparePositionsMonsters (getPositionMonster $ last a) (getPositionMonster $ head b) = b
+      | otherwise = []
     plusplusAccept :: [Platform] -> [Platform] -> [Platform]
     plusplusAccept a b
+      | length a == 0 = b 
       | comparePositions (getPosition $ last a) (getPosition $ head b) = b
       | otherwise = []
+    getPositionMonster :: Monster -> Position
+    getPositionMonster (Monster pos _ _ _ ) = pos
     getPosition :: Platform -> Position
     getPosition (Platform pos _ _ _ _) = pos
+    comparePositionsMonsters :: Position -> Position -> Bool
+    comparePositionsMonsters (Position _ pl1y) (Position _ pl2y) =
+      pl2y - pl1y > 25
     comparePositions :: Position -> Position -> Bool
     comparePositions (Position _ pl1y) (Position _ pl2y) =
       pl2y - pl1y > distanceOfPlatforms
@@ -115,24 +127,76 @@ level_e_1 = LevelPattern
       (Platform (Position (8) (53)) 5 1 GREEN LEFT)
     ]
     []
+
+level_e_2 = LevelPattern 
+    [
+      (Platform (Position (-10) (25)) 5 1 GREEN LEFT),
+      (Platform (Position (7) (32)) 5 1 GREEN LEFT),
+      (Platform (Position (-11) (39)) 5 1 GREEN LEFT),
+      (Platform (Position (12) (46)) 5 1 GREEN LEFT),
+      (Platform (Position (3) (53)) 5 1 GREEN LEFT)
+    ]
+    []
+
+level_e_3 = LevelPattern 
+    [
+      (Platform (Position (-10) (25)) 5 1 GREEN LEFT),
+      (Platform (Position (0) (32)) 5 1 GREEN LEFT),
+      (Platform (Position (10) (39)) 5 1 GREEN LEFT),
+      (Platform (Position (0) (46)) 5 1 GREEN LEFT),
+      (Platform (Position (-10) (53)) 5 1 GREEN LEFT)
+    ]
+    []
   
-level_1 = LevelPattern 
+
+level_h_1 = LevelPattern 
     [
-      (Platform (Position (-10) (-20)) 5 1 GREEN LEFT),
-      (Platform (Position 0 (-20)) 5 1 GREEN LEFT),
-      (Platform (Position 10 (-20)) 5 1 GREEN LEFT),
-      (Platform (Position (-10) (-6)) 5 1 GREEN LEFT)
+      (Platform (Position (-12) (25)) 5 1 WHITE LEFT),
+      (Platform (Position (10) (38)) 5 1 WHITE LEFT),
+      (Platform (Position (-7) (51)) 5 1 WHITE LEFT)
     ]
+    [ ]
+
+level_h_2 = LevelPattern 
     [
+      (Platform (Position (-12) (25)) 5 1 BLUE LEFT),
+      (Platform (Position (10) (38)) 5 1 BLUE RIGHT),
+      (Platform (Position (-7) (51)) 5 1 BLUE LEFT)
     ]
-  
-level_3 = LevelPattern 
+    []
+
+level_h_3 = LevelPattern 
     [
-      (Platform (Position (-10) (-20)) 5 1 GREEN LEFT),
-      (Platform (Position 0 (-20)) 5 1 GREEN LEFT),
-      (Platform (Position 10 (-20)) 5 1 GREEN LEFT),
-      (Platform (Position (-10) (-6)) 5 1 GREEN LEFT)
+      (Platform (Position (-12) (25)) 5 1 WHITE LEFT),
+      (Platform (Position (10) (38)) 5 1 WHITE LEFT),
+      (Platform (Position (-7) (51)) 5 1 WHITE LEFT)
     ]
+    [ (Monster (Position (-1) 35) 8 8 MONSTER2) ]
+
+
+level_m_1 = LevelPattern 
     [
+      (Platform (Position (-10) (25)) 5 1 GREEN LEFT),
+      (Platform (Position (0) (35)) 5 1 BLUE LEFT),
+      (Platform (Position (-10) (45)) 5 1 WHITE LEFT)
     ]
-  
+    [ (Monster (Position (-3) 35) 6 6 MONSTER1) ]
+
+level_m_2 = LevelPattern 
+    [
+      (Platform (Position (-12) (25)) 5 1 GREEN LEFT),
+      (Platform (Position (0) (25)) 5 1 GREEN LEFT),
+      (Platform (Position (0) (35)) 5 1 BLUE LEFT),
+      (Platform (Position (0) (45)) 5 1 WHITE LEFT)
+    ]
+    []
+
+level_m_3 = LevelPattern 
+    [
+      (Platform (Position (0) (25)) 5 1 WHITE LEFT),
+      (Platform (Position (-7) (35)) 5 1 GREEN LEFT),
+      (Platform (Position (10) (45)) 5 1 BLUE LEFT),
+      (Platform (Position (0) (55)) 5 1 GREEN LEFT)
+    ]
+    []
+
