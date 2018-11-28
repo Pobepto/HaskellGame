@@ -21,7 +21,6 @@ description:         Please see the README on GitHub at <https://github.com/Pobe
 
 dependencies:
 - base >= 4.7 && < 5
-- codeworld-api >= 0.2.5
 - random >= 1.1
 - gloss >= 1.13.0.1
 
